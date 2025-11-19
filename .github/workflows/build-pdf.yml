@@ -1,0 +1,39 @@
+name: build-pdfs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: discover
+        run: |
+          FILES=$(find . -type f -name "main.tex")
+          echo "FILES<<EOF" >> $GITHUB_ENV
+          echo "$FILES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - uses: xu-cheng/latex-action@v4
+        with:
+          root_file: |
+            ${{ env.FILES }}
+
+      - name: Collect PDFs
+        run: |
+          mkdir -p pdfs
+          find . -type f -name "*.pdf" | while read pdf; do
+            DEST=pdfs/${pdf#./}           # preserve folder structure
+            mkdir -p $(dirname "$DEST")
+            cp "$pdf" "$DEST"
+          done
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v7
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./pdfs

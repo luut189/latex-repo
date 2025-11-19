@@ -1,7 +1,7 @@
 \documentclass[letterpaper,11pt]{article}
 
-\newif\ifinternal
-\internaltrue   % change to \internalfalse for external version
+\newif\ifexternal
+\externaltrue   % change to \internalfalse for external version
 
 \input{preamble}
 
@@ -16,8 +16,8 @@
   \href{https://luut189.github.io/}{\underline{luut189.github.io/}}
 \end{center}
 
-\ifinternal
-  % Internal order
+\ifexternal
+  % Waterloo order
   \input{sections/education}
   \input{sections/skills}
   \input{sections/experience}
