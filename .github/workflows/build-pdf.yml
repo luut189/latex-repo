@@ -33,9 +33,9 @@ jobs:
         run: |
           mkdir -p pdfs
           find . -type f -name "*.pdf" | while read pdf; do
-            DEST=pdfs/${pdf#./}           # preserve folder structure
-            mkdir -p $(dirname "$DEST")
-            cp "$pdf" "$DEST"
+            rel_path=$(dirname "$pdf" | sed 's|^\./||')
+            name=$(echo "$rel_path" | sed 's|^assignments/||' | tr '/' '_')
+            cp "$pdf" "pdfs/${name}.pdf"
           done
 
       - name: Deploy to GitHub Pages
